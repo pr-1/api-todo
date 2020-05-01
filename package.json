@@ -23,8 +23,11 @@
   "dependencies": {
     "@nestjs/common": "^7.0.0",
     "@nestjs/core": "^7.0.0",
+    "@nestjs/jwt": "^7.0.0",
+    "@nestjs/passport": "^7.0.0",
     "@nestjs/platform-express": "^7.0.0",
     "@typegoose/typegoose": "^7.0.0",
+    "bcrypt": "^4.0.1",
     "bluebird": "^3.5.5",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.12.2",
@@ -32,6 +35,8 @@
     "is-class": "0.0.9",
     "mongoose": "^5.9.10",
     "nestjs-typegoose": "^7.1.16",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.5.5",
     "uuid": "^7.0.3"

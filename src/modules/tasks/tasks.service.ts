@@ -25,7 +25,7 @@ export class TasksService {
   }
 
   async deleteTask(id: string): Promise<any> {
-    return await this.taskModel.deleteOne({_id: id}).exec();
+    return await this.taskModel.findByIdAndDelete(this.toObjectId(id)).exec();
   }
 
   async updateTask(id: string, updateTask: Partial<Task>): Promise<Task> {
