@@ -4,10 +4,14 @@ import { User } from '../../models/user.model';
 import { InjectModel } from 'nestjs-typegoose';
 import { AuthDto } from '../../dto/auth-dto';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import { Payload } from '../../models/payload.model';
 
 @Injectable()
 export class AuthService {
-  constructor(@InjectModel(User) private userModel: ReturnModelType<typeof User>) {
+  constructor(
+    @InjectModel(User) private userModel: ReturnModelType<typeof User>,
+    private jwtService: JwtService) {
   }
 
   async createUser(authDto: AuthDto) {
@@ -31,12 +35,19 @@ export class AuthService {
     if(!user){
       throw( new NotFoundException('User Not Found'));
     }
-    if(this.validatePassword(authDto.password, user.password)) {
+    if(await this.validatePassword(authDto.password, user.password)) {
+      const payload: Payload = {
+        email: authDto.email
+      };
+      const token = await this.jwtService.sign(payload);
       return {
-        data: user
+        data: {
+          user,
+          token
+        }
       };
     } else {
-      throw(new UnauthorizedException())
+      throw(new UnauthorizedException('Invalid Credentials'));
     }
   }
 
@@ -44,7 +55,7 @@ export class AuthService {
     return bcrypt.hash(password, salt);
   }
 
-  private validatePassword(enteredPassword: string, initialHash: string) {
-    return bcrypt.compare(enteredPassword, initialHash).pass
+  private validatePassword(enteredPassword: string, initialHash: string): Promise<boolean> {
+    return bcrypt.compare(enteredPassword, initialHash);
   }
 }
