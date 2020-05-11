@@ -1,7 +1,21 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Req, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Logger,
+  Param,
+  Post,
+  Put,
+  Req,
+  UseGuards,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { Task } from '../../models/tasks.model';
 import { CreateTaskDto } from '../../dto/create-task-dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('tasks')
 export class TasksController {
@@ -9,12 +23,14 @@ export class TasksController {
   }
 
   @Get()
-  async getTasks(): Promise<Task[]> {
+  async getTasks(): Promise<{data: Task[]}> {
     Logger.log(`Get posts Api called`, 'Post Controller');
     this.service.getTasks().then(res => {
       console.log(res);
     })
-    return this.service.getTasks();
+    return {
+      data: await this.service.getTasks(),
+    };
   }
   @Get(':id')
   async getTasksById(@Param('id') id: string): Promise<Task> {

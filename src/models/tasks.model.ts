@@ -5,7 +5,7 @@ export enum TaskStatus {
   DONE = "done"
 }
 export class Task {
-  @prop({unique: true})
+  @prop({_id: true})
   id: string;
   @prop({required: true, index: true})
   title: string;
@@ -13,5 +13,6 @@ export class Task {
   description: string;
   @prop({default: TaskStatus.OPEN})
   status: TaskStatus;
+  // @prop()
 }
 

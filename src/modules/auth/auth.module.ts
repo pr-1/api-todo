@@ -5,6 +5,7 @@ import { TypegooseModule } from 'nestjs-typegoose';
 import { User } from '../../models/user.model';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import { JwtStrategy } from '../../validators/jwt-strategy';
 
 @Module({
   imports: [
@@ -13,10 +14,14 @@ import { PassportModule } from '@nestjs/passport';
     }),
     JwtModule.register({
       secret: 'secret@1234',
+      signOptions: {
+        expiresIn: 3600
+      }
     }),
     TypegooseModule.forFeature([User])],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, JwtStrategy],
+  exports: [JwtStrategy, PassportModule]
 })
 export class AuthModule {
 }
